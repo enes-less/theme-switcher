@@ -117,8 +117,7 @@ IFS=$'\t' read -r \
 [[ -z "$bg_hex" ]] && { echo "colors.json missing .bg"; exit 1; }
 [[ -z "$accent_hex" ]] && { echo "colors.json missing .accent"; exit 1; }
 
-# ---------------- One-time fallbacks (moved from Starship/Kitty blocks) ----------------
-# Starship-style fallbacks (used by multiple renderers safely)
+# ---------------- One-time fallbacks ----------------
 [[ -z "$accent_hex" ]] && accent_hex="${accent_alt_hex:-${green_hex:-${blue_hex:-#7aa2f7}}}"
 [[ -z "$fg_hex" ]] && fg_hex="#c0caf5"
 [[ -z "$red_hex" ]] && red_hex="${pink_hex:-#f7768e}"
