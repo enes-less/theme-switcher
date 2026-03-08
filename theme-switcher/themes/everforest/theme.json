@@ -1,0 +1,22 @@
+{
+  "name": "Everforest",
+  "id": "everforest",
+  "default_wallpaper": "wallpapers/berries.png",
+  "fonts": {
+    "family": "JetBrainsMono Nerd Font",
+    "family_bold": "JetBrainsMono Nerd Font Bold"
+  },
+
+  "hypr": {
+    "border_size": 3,
+    "gaps_out": 20,
+    "rounding": 16,
+
+    "blur": {
+      "enabled": true,
+      "size": 5,
+      "passes": 3,
+      "vibrancy": 0.2
+    }
+  }
+}

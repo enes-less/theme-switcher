@@ -100,9 +100,11 @@ More programs will be added in future.
 ```
 
 4. Install the Hyprland configuration
+   - Note: This will override your existing hyprland config. Make a backup of your own config before proceeding.
 
 ```bash
-   cp -r hyprland ~/.config/
+   mkdir -p ~/.config/hypr
+   cp -r hyprland/* ~/.config/hypr/
 ```
 
 5. Reload Hyprland
@@ -129,3 +131,5 @@ The repository includes a default `generated-theme.conf` so Hyprland has a valid
 However, the full theme is not applied until you select one through the theme picker. Reloading Hyprland only loads the provided Hyprland configuration.
 
 To apply the full theme across supported applications such as Waybar, Kitty, and Wofi, you must select a theme using the theme picker.
+
+Also, GTK font choice will not be effected with the current version of the theme switcher. An optional apply function will be implemented.
