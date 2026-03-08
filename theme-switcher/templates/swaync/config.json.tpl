@@ -1,5 +1,7 @@
 {
   "$schema": "/etc/xdg/swaync/configSchema.json",
+  "ignore-gtk-theme": true,
+  "cssPriority": "user",
   "positionX": "right",
   "positionY": "top",
   "layer": "overlay",
@@ -15,7 +17,7 @@
     "volume#cc_volume",
     "slider#cc_brightness",
     "label#notif_title",
-    "notifications#cc_notifications"
+    "notifications"
   ],
   "widget-config": {
     "buttons-grid#cc_controls": {
@@ -53,7 +55,7 @@
     "label#notif_title": {
       "text": "Notifications"
     },
-    "notifications#cc_notifications": {
+    "notifications": {
       "vexpand": true
     }
   }
