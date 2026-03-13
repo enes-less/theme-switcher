@@ -1,0 +1,7 @@
+[config]
+set_wallpaper = false
+reload_apps   = false
+
+[templates.colors_json]
+input_path  = "~/.config/matugen/templates/colors.json.tpl"
+output_path = "~/.config/theme-switcher/themes/dynamic/colors.json"
