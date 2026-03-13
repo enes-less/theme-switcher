@@ -14,9 +14,68 @@ OUT="$HOME/.config/hypr/generated-theme.conf"
 [[ -z "$THEME" ]] && { echo "Usage: apply-theme.sh <theme>"; exit 1; }
 [[ ! -d "$THEME_PATH" ]] && { echo "Theme not found: $THEME_PATH"; exit 1; }
 
-[[ ! -f "$COLORS" ]] && { echo "Missing: $COLORS"; exit 1; }
 [[ ! -f "$THEME_JSON" ]] && { echo "Missing: $THEME_JSON"; exit 1; }
 [[ ! -f "$TPL" ]] && { echo "Missing: $TPL"; exit 1; }
+
+# --------- Dynamic theme: generate colors from wallpaper via matugen ----------
+if [[ "$THEME" == "dynamic" ]]; then
+  WP="${2:-}"
+
+  if [[ -z "$WP" ]]; then
+    # Detect launcher for wallpaper selection
+    if command -v rofi >/dev/null 2>&1; then
+      _PICKER="rofi"
+    elif command -v wofi >/dev/null 2>&1; then
+      _PICKER="wofi"
+    else
+      echo "Error: neither rofi nor wofi found" >&2; exit 1
+    fi
+
+    WP_DIR="$HOME/Pictures/wallpapers"
+    [[ -d "$WP_DIR" ]] || WP_DIR="$HOME/Pictures"
+    [[ -d "$WP_DIR" ]] || { echo "No wallpaper directory found"; exit 1; }
+
+    mapfile -d '' -t _wfiles < <(
+      find "$WP_DIR" -maxdepth 1 -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+        -printf '%f\0' | sort -z
+    )
+    [[ ${#_wfiles[@]} -gt 0 ]] || { echo "No wallpapers found in $WP_DIR"; exit 1; }
+
+    if [[ "$_PICKER" == "rofi" ]]; then
+      ROFI_GRID_THEME="$HOME/.config/rofi/wallpaper-grid.rasi"
+      _input=""
+      for _f in "${_wfiles[@]}"; do
+        _input+="${_f}\0icon\x1f${WP_DIR}/${_f}\n"
+      done
+      _rofi_args=(-dmenu -p "Select wallpaper for dynamic theme")
+      [[ -f "$ROFI_GRID_THEME" ]] && _rofi_args+=(-theme "$ROFI_GRID_THEME")
+      WP_NAME="$(printf '%b' "$_input" | rofi "${_rofi_args[@]}")"
+    else
+      WP_NAME="$(printf '%s\n' "${_wfiles[@]}" | wofi --dmenu --prompt "Select wallpaper" --cache-file=/dev/null)"
+    fi
+
+    [[ -z "${WP_NAME:-}" ]] && exit 0
+    WP="$WP_DIR/$WP_NAME"
+  fi
+
+  [[ -f "$WP" ]] || { echo "Wallpaper not found: $WP"; exit 1; }
+
+  # Apply wallpaper immediately so the user sees it while colors generate
+  command -v swww >/dev/null 2>&1 && swww img "$WP" --transition-type wipe --transition-duration 0.8 >/dev/null 2>&1 || true
+
+  # Generate colors.json via matugen
+  if command -v matugen >/dev/null 2>&1; then
+    matugen image "$WP" -m dark -t scheme-tonal-spot >/dev/null 2>&1
+  else
+    echo "Warning: matugen not found — using existing colors.json" >&2
+  fi
+
+  # Save the absolute wallpaper path for next launch
+  echo "$WP" > "$THEME_PATH/current-wallpaper.txt"
+fi
+
+[[ ! -f "$COLORS" ]] && { echo "Missing: $COLORS"; exit 1; }
 
 # Color converters
 hex_to_rgba_ff() {
@@ -213,7 +272,12 @@ if [[ -z "$wp_rel" ]]; then
 fi
 
 if [[ -n "$wp_rel" ]]; then
-  wp_abs="$THEME_PATH/$wp_rel"
+  # Dynamic theme stores an absolute path; all other themes use relative paths
+  if [[ "$wp_rel" = /* ]]; then
+    wp_abs="$wp_rel"
+  else
+    wp_abs="$THEME_PATH/$wp_rel"
+  fi
   if [[ -f "$wp_abs" ]]; then
     ensure_swww || true
     swww img "$wp_abs" --transition-type wipe --transition-angle 29 --transition-duration 0.75 --transition-fps 75 --transition-bezier 0.25,0.1,0.25,1 >/dev/null 2>&1 || true

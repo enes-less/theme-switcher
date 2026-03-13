@@ -1,0 +1,19 @@
+{
+  "name": "Dynamic (Matugen)",
+  "id": "dynamic",
+  "fonts": {
+    "family": "JetBrainsMono Nerd Font",
+    "family_bold": "JetBrainsMono Nerd Font Bold"
+  },
+  "hypr": {
+    "border_size": 2,
+    "gaps_out": 10,
+    "rounding": 10,
+    "blur": {
+      "enabled": true,
+      "size": 8,
+      "passes": 2,
+      "vibrancy": 0.2
+    }
+  }
+}
