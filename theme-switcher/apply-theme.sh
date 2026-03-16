@@ -248,6 +248,29 @@ if [[ -f "$WOFI_TPL" ]]; then
     "$WOFI_TPL" > "$WOFI_OUT"
 fi
 
+# --------- Rofi ----------
+ROFI_TPL_DIR="$BASE/templates/rofi"
+ROFI_OUT_DIR="$HOME/.config/rofi"
+
+if [[ -d "$ROFI_TPL_DIR" ]]; then
+  mkdir -p "$ROFI_OUT_DIR"
+
+  for tpl in "$ROFI_TPL_DIR"/*.tpl; do
+    [[ -f "$tpl" ]] || continue
+    out="$ROFI_OUT_DIR/$(basename "$tpl" .tpl)"
+
+    sed \
+      -e "s/{{bg}}/$bg_hex/g" \
+      -e "s/{{fg}}/$fg_hex/g" \
+      -e "s/{{surface}}/$surface_hex/g" \
+      -e "s/{{surface2}}/$surface2_hex/g" \
+      -e "s/{{overlay}}/$overlay_hex/g" \
+      -e "s/{{accent}}/$accent_hex/g" \
+      -e "s/{{font_family}}/$font_family/g" \
+      "$tpl" > "$out"
+  done
+fi
+
 # --------- Waybar (theme-specific layout + colors) ----------
 WAYBAR_DIR="$THEME_PATH/templates/waybar"
 WAYBAR_OUT_DIR="$HOME/.config/waybar"

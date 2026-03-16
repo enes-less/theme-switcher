@@ -21,7 +21,31 @@ mapfile -d '' -t files < <(
 
 pgrep -x swww-daemon >/dev/null 2>&1 || (swww-daemon >/dev/null 2>&1 &)
 
-choice="$(printf '%s\n' "${files[@]}" | wofi --dmenu --prompt "Select Wallpaper" --cache-file /dev/null)"
+# Detect launcher: prefer rofi, fall back to wofi
+if command -v rofi >/dev/null 2>&1; then
+  LAUNCHER="rofi"
+elif command -v wofi >/dev/null 2>&1; then
+  LAUNCHER="wofi"
+else
+  echo "Error: neither rofi nor wofi found" >&2
+  exit 1
+fi
+
+if [[ "$LAUNCHER" == "rofi" ]]; then
+  ROFI_GRID_THEME="$HOME/.config/rofi/wallpaper-grid.rasi"
+  input_data=""
+  for f in "${files[@]}"; do
+    input_data+="${f}\0icon\x1f${WPDIR}/${f}\n"
+  done
+
+  rofi_args=(-dmenu -p "Wallpaper")
+  [[ -f "$ROFI_GRID_THEME" ]] && rofi_args+=(-theme "$ROFI_GRID_THEME")
+
+  choice="$(printf '%b' "$input_data" | rofi "${rofi_args[@]}")"
+else
+  choice="$(printf '%s\n' "${files[@]}" | wofi --dmenu --prompt "Select Wallpaper" --cache-file /dev/null)"
+fi
+
 [[ -z "${choice:-}" ]] && exit 0
 
 picked="$WPDIR/$choice"
@@ -32,10 +56,8 @@ for _ in {1..20}; do
   sleep 0.1
 done
 
-# random transition and angle for wallpaper. change
 transitions=("outer" "wipe")
 angles=(0 29 90 151 180 209 270 331)
-
 t=${transitions[$RANDOM % ${#transitions[@]}]}
 a=${angles[$RANDOM % ${#angles[@]}]}
 
