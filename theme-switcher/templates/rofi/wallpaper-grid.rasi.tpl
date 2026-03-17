@@ -29,7 +29,6 @@ window {
     border-color:     @accent;
     border-radius:    20px;
     width:            1120px;
-    height:           607px;
     location:         center;
     anchor:           center;
 }
@@ -65,12 +64,12 @@ entry {
 listview {
     background-color: transparent;
     columns:          4;
-    lines:            3;
-    spacing:          16px;
+    lines:            2;
+\    spacing:          16px;
     padding:          4px;
     scrollbar:        true;
-    fixed-columns:    true;
-    fixed-height:     true;
+    fixed-columns:    false;
+    fixed-height:     false;
     cycle:            true;
     dynamic:          true;
     layout:           vertical;
