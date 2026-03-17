@@ -79,12 +79,12 @@ window#waybar {
   min-width: 10px;
   min-height: 10px;
 
-  margin: 0 4px;
+  margin: 0 2px;
   padding: 0 4px;
 
   background: transparent;
-  border: 2px solid {{accent}};
-  border-radius: 4px;
+  border: 2px solid {{surface2}};
+  border-radius: 8px;
 
   color: {{fg}};
 }
@@ -95,7 +95,7 @@ window#waybar {
   min-height: 12px;
 
   background: {{accent}};
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
 
   color: {{bg}};

@@ -11,16 +11,16 @@ configuration {
 
     background-color: transparent;
     text-color:       {{fg}};
-    border-color:     transparent;
     spacing:          0;
     padding:          0;
     margin:           0;
 }
 
 window {
-    background-color: {{bg}}f2;
-    border:           0;
+    background-color: {{bg}};
     border-radius:    20px;
+    border-color:     {{accent}};
+    border:           2px;
     width:            60%;
     location:         center;
     anchor:           center;
@@ -44,8 +44,17 @@ listview {
     border:           0;
 }
 
+scrollbar {
+    width: 8px;
+    border: 0;
+    border-radius: 999px;
+    background-color: {{surface}};
+    handle-width: 8px;
+    handle-color: {{accent}};
+}
+
 element {
-    background-color: transparent;
+    background-color: {{surface}};
     border-radius:    15px;
     padding:          15px;
     spacing:          10px;
@@ -53,10 +62,18 @@ element {
     cursor:           pointer;
 }
 
+element normal.normal {
+    background-color: {{surface}};
+}
+
+element alternate.normal {
+    background-color: {{surface}};
+}
+
 element selected.normal {
     background-color: {{accent}}33;
     border:           2px;
-    border-color:     @accent;
+    border-color:     {{accent}};
 }
 
 element-icon {
@@ -75,5 +92,5 @@ element-text {
 }
 
 element selected.normal element-text {
-    text-color: @accent;
+    text-color: {{accent}};
 }

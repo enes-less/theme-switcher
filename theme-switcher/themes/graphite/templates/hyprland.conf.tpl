@@ -40,3 +40,6 @@ layerrule = ignore_alpha 0.2, match:namespace wofi
 
 layerrule = blur on, match:class wlogout
 layerrule = ignore_alpha 0.2, match:class wlogout
+
+# Hyprshot selection fix
+layerrule = blur off, match:namespace selection

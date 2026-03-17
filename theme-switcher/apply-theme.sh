@@ -262,6 +262,7 @@ if [[ -d "$ROFI_TPL_DIR" ]]; then
     sed \
       -e "s/{{bg}}/$bg_hex/g" \
       -e "s/{{fg}}/$fg_hex/g" \
+      -e "s/{{fg_dim}}/$fg_dim_hex/g" \
       -e "s/{{surface}}/$surface_hex/g" \
       -e "s/{{surface2}}/$surface2_hex/g" \
       -e "s/{{overlay}}/$overlay_hex/g" \

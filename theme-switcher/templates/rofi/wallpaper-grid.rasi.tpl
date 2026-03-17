@@ -1,7 +1,7 @@
 configuration {
     modi:       "dmenu";
     show-icons: true;
-    font:       "JetBrains Mono 11";
+    font:       "JetBrainsMono Nerd Font 11";
 }
 
 * {
@@ -22,7 +22,7 @@ configuration {
 window {
     background-color: @bg;
     border:           2px;
-    border-color:     {{surface2}};
+    border-color:     {{accent}};
     border-radius:    20px;
     width:            900px;
     height:           600px;
@@ -65,6 +65,17 @@ listview {
     scrollbar:        true;
     fixed-height:     false;
     layout:           vertical;
+    flow:             horizontal;
+    fixed-columns:    true;
+}
+
+scrollbar {
+    width: 8px;
+    border: 0;
+    border-radius: 999px;
+    background-color: {{surface}};
+    handle-width: 8px;
+    handle-color: {{accent}};
 }
 
 element {

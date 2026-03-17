@@ -33,13 +33,15 @@ fi
 
 if [[ "$LAUNCHER" == "rofi" ]]; then
   ROFI_GRID_THEME="$HOME/.config/rofi/wallpaper-grid.rasi"
+  ROFI_CFG="$HOME/.config/rofi/theme-picker.rasi"
+
   input_data=""
   for f in "${files[@]}"; do
     input_data+="${f}\0icon\x1f${WPDIR}/${f}\n"
   done
 
   rofi_args=(-dmenu -p "Wallpaper")
-  [[ -f "$ROFI_GRID_THEME" ]] && rofi_args+=(-theme "$ROFI_GRID_THEME")
+  [[ -f "$ROFI_GRID_THEME" ]] && rofi_args+=(-config "$ROFI_CFG")
 
   choice="$(printf '%b' "$input_data" | rofi "${rofi_args[@]}")"
 else
