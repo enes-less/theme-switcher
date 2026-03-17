@@ -59,7 +59,7 @@ If the font is missing, applications will fall back to another font. You can edi
 The theme switcher can currently generate configuration for the following programs:
 
 - Waybar
-- Wofi
+- Wofi / Rofi
 - Kitty
 - Starship
 - Hyprlock
@@ -72,6 +72,8 @@ If one of these programs is not installed, the script will still generate the co
 Peaclock runs as a live terminal application and loads its configuration when launched.  
 Because of this, theme changes applied while Peaclock is already running will not take effect immediately.  
 To apply the new theme, restart Peaclock after switching themes.
+
+Rofi is detected automatically. If Rofi is installed, system will use Rofi. If Rofi is not installed but Wofi is installed, then the system will use Wofi instead.
 
 More programs will be added in future.
 
