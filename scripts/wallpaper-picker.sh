@@ -33,7 +33,7 @@ fi
 
 if [[ "$LAUNCHER" == "rofi" ]]; then
   ROFI_GRID_THEME="$HOME/.config/rofi/wallpaper-grid.rasi"
-  ROFI_CFG="$HOME/.config/rofi/theme-picker.rasi"
+  ROFI_CFG="$HOME/.config/rofi/wallpaper-grid.rasi"
 
   input_data=""
   for f in "${files[@]}"; do

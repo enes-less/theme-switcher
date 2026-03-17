@@ -1,15 +1,19 @@
 configuration {
-    modi:       "dmenu";
-    show-icons: true;
-    font:       "JetBrainsMono Nerd Font 11";
+    modi:         "dmenu";
+    show-icons:   true;
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: "MousePrimary";
+    font:         "{{font_family}} 11";
 }
 
 * {
-    bg:     {{bg}};
-    bg-alt: {{surface}};
-    fg:     {{fg}};
-    fg-dim: {{overlay}};
-    sel:    {{accent}};
+    bg:         {{bg}};
+    surface:    {{surface}};
+    surface2:   {{surface2}};
+    fg:         {{fg}};
+    fg-dim:     {{overlay}};
+    accent:     {{accent}};
 
     background-color: transparent;
     text-color:       @fg;
@@ -22,10 +26,10 @@ configuration {
 window {
     background-color: @bg;
     border:           2px;
-    border-color:     {{accent}};
+    border-color:     @accent;
     border-radius:    20px;
-    width:            900px;
-    height:           600px;
+    width:            1120px;
+    height:           607px;
     location:         center;
     anchor:           center;
 }
@@ -33,26 +37,27 @@ window {
 mainbox {
     background-color: transparent;
     children:         [inputbar, listview];
-    padding:          24px;
-    spacing:          20px;
+    padding:          20px;
+    spacing:          16px;
 }
 
 inputbar {
-    background-color: @bg-alt;
-    border-radius:    10px;
+    background-color: @surface;
+    border-radius:    14px;
     padding:          12px 16px;
     children:         [prompt, entry];
     spacing:          10px;
 }
 
 prompt {
-    text-color: @sel;
+    background-color: transparent;
+    text-color:       @accent;
 }
 
 entry {
     background-color:  transparent;
     text-color:        @fg;
-    placeholder:       "Select wallpaper...";
+    placeholder:       " Select wallpaper...";
     placeholder-color: @fg-dim;
     vertical-align:    0.5;
 }
@@ -61,57 +66,68 @@ listview {
     background-color: transparent;
     columns:          4;
     lines:            3;
-    spacing:          12px;
+    spacing:          16px;
+    padding:          4px;
     scrollbar:        true;
-    fixed-height:     false;
+    fixed-columns:    true;
+    fixed-height:     true;
+    cycle:            true;
+    dynamic:          true;
     layout:           vertical;
     flow:             horizontal;
-    fixed-columns:    true;
+    border:           0px;
 }
 
 scrollbar {
-    width: 8px;
-    border: 0;
-    border-radius: 999px;
-    background-color: {{surface}};
-    handle-width: 8px;
-    handle-color: {{accent}};
+    width:            8px;
+    border:           0;
+    border-radius:    999px;
+    background-color: {{surface2}}16;
+    handle-width:     8px;
+    handle-color:     {{accent}};
 }
 
 element {
-    background-color: transparent;
-    border-radius:    12px;
-    padding:          10px;
-    spacing:          8px;
+    background-color: @surface;
+    border-radius:    14px;
+    padding:          12px;
+    spacing:          10px;
     orientation:      vertical;
     cursor:           pointer;
 }
 
+element normal.normal {
+    background-color: @surface;
+}
+
+element alternate.normal {
+    background-color: @surface;
+}
+
+element selected.normal {
+    background-color: {{accent}}22;
+    border:           2px;
+    border-color:     @accent;
+}
+
 element-icon {
     background-color: transparent;
+    border-radius:    10px;
     cursor:           inherit;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
     size:             180px;
 }
 
 element-text {
     background-color: transparent;
     text-color:       @fg;
+    cursor:           inherit;
+    font:             "{{font_family}} 11";
     horizontal-align: 0.5;
     vertical-align:   0.5;
-    cursor:           inherit;
 }
 
-element.selected.normal {
-    background-color: @bg-alt;
-}
-
-element.selected.normal element-icon {
-    border:        2px;
-    border-color:  @sel;
-    border-radius: 8px;
-}
-
-element.selected.normal element-text {
-    text-color: @sel;
-    font:       "JetBrains Mono Bold 11";
+element selected.normal element-text {
+    text-color: @accent;
 }
