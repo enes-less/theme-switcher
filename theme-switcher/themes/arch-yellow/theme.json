@@ -1,0 +1,20 @@
+{
+  "name": "Arch Yellow",
+  "id": "arch-yellow",
+  "default_wallpaper": "",
+  "fonts": {
+    "family": "JetBrainsMono Nerd Font",
+    "family_bold": "JetBrainsMono Nerd Font Bold"
+  },
+  "hypr": {
+    "border_size": 2,
+    "gaps_out": 15,
+    "rounding": 12,
+    "blur": {
+      "enabled": true,
+      "size": 6,
+      "passes": 3,
+      "vibrancy": 0.15
+    }
+  }
+}
