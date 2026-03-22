@@ -76,7 +76,7 @@ To apply the new theme, restart Peaclock after switching themes.
 
 Rofi is detected automatically. If Rofi is installed, system will use Rofi. If Rofi is not installed but Wofi is installed, then the system will use Wofi instead.
 
-**Since Obsidian uses vault-specific snippets, the theme switcher expects a vault called "obsidian" under your home directory. You can change this behavior in the Obsidian block of `apply-theme.sh`**
+**Since Obsidian uses vault-specific snippets, the theme switcher expects a vault called "obsidian" under your home directory. You can change this behavior in the Obsidian block of `apply-theme.sh`. If you don't want to edit the script, create a vault called obsidian, and then change the theme. Then turn the snippet on from settings.**
 
 More programs will be added in future.
 
