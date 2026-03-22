@@ -4,6 +4,7 @@ set -euo pipefail
 BASE="$HOME/.config/theme-switcher"
 STATE="$BASE/current-theme.json"
 THEMES_DIR="$BASE/themes"
+APPLY="$BASE/apply-theme.sh"
 
 theme="$(jq -r '.theme // empty' "$STATE" 2>/dev/null || true)"
 [[ -z "$theme" ]] && exit 1
@@ -21,7 +22,6 @@ mapfile -d '' -t files < <(
 
 pgrep -x swww-daemon >/dev/null 2>&1 || (swww-daemon >/dev/null 2>&1 &)
 
-# Detect launcher: prefer rofi, fall back to wofi
 if command -v rofi >/dev/null 2>&1; then
   LAUNCHER="rofi"
 elif command -v wofi >/dev/null 2>&1; then
@@ -32,7 +32,6 @@ else
 fi
 
 if [[ "$LAUNCHER" == "rofi" ]]; then
-  ROFI_GRID_THEME="$HOME/.config/rofi/wallpaper-grid.rasi"
   ROFI_CFG="$HOME/.config/rofi/wallpaper-grid.rasi"
 
   input_data=""
@@ -41,7 +40,7 @@ if [[ "$LAUNCHER" == "rofi" ]]; then
   done
 
   rofi_args=(-dmenu -p "Wallpaper")
-  [[ -f "$ROFI_GRID_THEME" ]] && rofi_args+=(-config "$ROFI_CFG")
+  [[ -f "$ROFI_CFG" ]] && rofi_args+=(-config "$ROFI_CFG")
 
   choice="$(printf '%b' "$input_data" | rofi "${rofi_args[@]}")"
 else
@@ -63,6 +62,29 @@ angles=(0 29 90 151 180 209 270 331)
 t=${transitions[$RANDOM % ${#transitions[@]}]}
 a=${angles[$RANDOM % ${#angles[@]}]}
 
-swww img "$picked" --transition-type "$t" --transition-angle "$a" --transition-duration 0.75 --transition-fps 75 --transition-bezier 0.25,0.1,0.25,1
+if [[ "$theme" == "dynamic" ]]; then
 
-echo "wallpapers/$choice" > "$THEME_PATH/current-wallpaper.txt"
+  if command -v matugen >/dev/null 2>&1; then
+    matugen -c "$BASE/extras/matugen/config.toml" \
+      image "$picked" \
+      -m dark \
+      -t scheme-tonal-spot \
+      --source-color-index 0 >/dev/null 2>&1 || {
+        echo "Warning: matugen failed — keeping existing colors.json" >&2
+      }
+  else
+    echo "Warning: matugen not found — keeping existing colors.json" >&2
+  fi
+
+  THEME_SWITCHER_SKIP_WALLPAPER=1 "$APPLY" dynamic "$picked"
+else
+  # normal themes: existing behavior
+  swww img "$picked" \
+    --transition-type "$t" \
+    --transition-angle "$a" \
+    --transition-duration 0.75 \
+    --transition-fps 75 \
+    --transition-bezier 0.25,0.1,0.25,1
+
+  echo "wallpapers/$choice" > "$THEME_PATH/current-wallpaper.txt"
+fi

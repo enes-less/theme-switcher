@@ -1,0 +1,62 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 10,
+  "height": 34,
+  "spacing": 10,
+  "modules-left": [],
+  "modules-center": [
+    "hyprland/workspaces",
+    "pulseaudio",
+    "network",
+    "bluetooth",
+    "clock",
+    "tray",
+    "custom/notification"
+  ],
+  "modules-right": [],
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "on-click": "activate"
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰝟  Muted",
+    "format-icons": {
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "tooltip": false
+  },
+  "network": {
+    "format-wifi": "  {essid}",
+    "format-ethernet": "󰈀 Wired",
+    "format-disconnected": "󰖪  Offline",
+    "tooltip": false
+  },
+  "bluetooth": {
+    "format": " BT",
+    "format-disabled": "󰂲 BT",
+    "format-connected": " BT",
+    "on-click": "blueman-manager",
+    "on-click-right": "bluetoothctl power toggle",
+    "tooltip": false
+  },
+  "clock": {
+    "format": "  {:%d %b %Y |   %H:%M}",
+    "tooltip": false
+  },
+  "tray": {
+    "spacing": 10
+  },
+  "custom/notification": {
+    "format": "󰂚",
+    "on-click": "swaync-client -t -sw",
+    "tooltip": false
+  }
+}
