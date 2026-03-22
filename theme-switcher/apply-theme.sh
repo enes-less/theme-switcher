@@ -45,6 +45,16 @@ hex_to_rgb_css() {
     $((16#${hex:4:2}))
 }
 
+hex_to_rgb_csv() {
+  local hex="${1#\#}"
+  [[ "$hex" =~ ^[0-9a-fA-F]{6}$ ]] || { echo "Invalid hex: $1" >&2; exit 1; }
+  printf "%d,%d,%d" \
+    $((16#${hex:0:2})) \
+    $((16#${hex:2:2})) \
+    $((16#${hex:4:2}))
+}
+
+# Ensure swww is running
 ensure_swww() {
   if ! pgrep -x swww-daemon >/dev/null 2>&1; then
     swww-daemon >/dev/null 2>&1 &
@@ -272,6 +282,49 @@ if [[ -d "$ROFI_TPL_DIR" ]]; then
   done
 fi
 
+# --------- Fastfetch ----------
+FASTFETCH_TPL="$BASE/templates/fastfetch/config.jsonc.tpl"
+FASTFETCH_DIR="$HOME/.config/fastfetch"
+FASTFETCH_OUT="$FASTFETCH_DIR/config.jsonc"
+
+if [[ -f "$FASTFETCH_TPL" ]]; then
+  mkdir -p "$FASTFETCH_DIR"
+
+  sed \
+    -e "s/{{fg}}/$fg_hex/g" \
+    "$FASTFETCH_TPL" > "$FASTFETCH_OUT"
+fi
+
+# --------- Kitty ----------
+KITTY_TPL="$BASE/templates/kitty.conf.tpl"
+KITTY_OUT="$HOME/.config/kitty/theme.conf"
+
+if [[ -f "$KITTY_TPL" ]]; then
+  mkdir -p "$HOME/.config/kitty"
+
+  sed \
+    -e "s/{{bg}}/$bg_hex/g" \
+    -e "s/{{fg}}/$fg_hex/g" \
+    -e "s/{{fg_dim}}/$fg_dim_hex/g" \
+    -e "s/{{accent}}/$accent_hex/g" \
+    -e "s/{{surface}}/$surface_hex/g" \
+    -e "s/{{surface2}}/$surface2_hex/g" \
+    -e "s/{{red}}/$red_hex/g" \
+    -e "s/{{green}}/$green_hex/g" \
+    -e "s/{{yellow}}/$yellow_hex/g" \
+    -e "s/{{blue}}/$blue_hex/g" \
+    -e "s/{{magenta}}/$magenta_hex/g" \
+    -e "s/{{cyan}}/$cyan_hex/g" \
+    -e "s/{{font_family}}/$font_family/g" \
+    -e "s/{{font_family_bold}}/$font_family_bold/g" \
+    "$KITTY_TPL" > "$KITTY_OUT"
+
+  for s in /tmp/kitty.sock-*; do
+    [[ -S "$s" ]] || continue
+    kitty @ --to "unix:$s" set-colors -a "$KITTY_OUT" >/dev/null 2>&1 || true
+  done
+fi
+
 # --------- Waybar (theme-specific layout + colors) ----------
 WAYBAR_DIR="$THEME_PATH/templates/waybar"
 WAYBAR_OUT_DIR="$HOME/.config/waybar"
@@ -301,6 +354,10 @@ if [[ -d "$WAYBAR_DIR" ]]; then
       -e "s/{{lavender}}/$lavender_hex/g" \
       -e "s/{{surface}}/$surface_hex/g" \
       -e "s/{{surface2}}/$surface2_hex/g" \
+      -e "s/{{bg_alt}}/$bg_alt_hex/g" \
+      -e "s/{{overlay}}/$overlay_hex/g" \
+      -e "s/{{fg_dim}}/$fg_dim_hex/g" \
+      -e "s/{{bg_rgba}}/$bg_rgba/g" \
       -e "s/{{font_family}}/$font_family/g" \
       -e "s/{{font_family_bold}}/$font_family_bold/g" \
       "$WAYBAR_DIR/style.css.tpl" > "$WAYBAR_STYLE_OUT"
@@ -340,36 +397,6 @@ if [[ -f "$STARSHIP_TPL" ]]; then
     rm -f "$tmp_star"
     echo "STARSHIP FAIL $(date) (sed render)" >> "$STARSHIP_LOG"
   fi
-fi
-
-# --------- Kitty ----------
-KITTY_TPL="$BASE/templates/kitty.conf.tpl"
-KITTY_OUT="$HOME/.config/kitty/theme.conf"
-
-if [[ -f "$KITTY_TPL" ]]; then
-  mkdir -p "$HOME/.config/kitty"
-
-  sed \
-    -e "s/{{bg}}/$bg_hex/g" \
-    -e "s/{{fg}}/$fg_hex/g" \
-    -e "s/{{fg_dim}}/$fg_dim_hex/g" \
-    -e "s/{{accent}}/$accent_hex/g" \
-    -e "s/{{surface}}/$surface_hex/g" \
-    -e "s/{{surface2}}/$surface2_hex/g" \
-    -e "s/{{red}}/$red_hex/g" \
-    -e "s/{{green}}/$green_hex/g" \
-    -e "s/{{yellow}}/$yellow_hex/g" \
-    -e "s/{{blue}}/$blue_hex/g" \
-    -e "s/{{magenta}}/$magenta_hex/g" \
-    -e "s/{{cyan}}/$cyan_hex/g" \
-    -e "s/{{font_family}}/$font_family/g" \
-    -e "s/{{font_family_bold}}/$font_family_bold/g" \
-    "$KITTY_TPL" > "$KITTY_OUT"
-
-  for s in /tmp/kitty.sock-*; do
-    [[ -S "$s" ]] || continue
-    kitty @ --to "unix:$s" set-colors -a "$KITTY_OUT" >/dev/null 2>&1 || true
-  done
 fi
 
 # --------- Hyprlock ----------
@@ -520,6 +547,49 @@ if [[ -f "$PEACLOCK_TEMPLATE" ]]; then
     -e "s/{{font_family}}/$font_family/g" \
     -e "s/{{font_family_bold}}/$font_family_bold/g" \
     "$PEACLOCK_TEMPLATE" > "$PEACLOCK_OUT"
+fi
+
+# --------- Obsidian ----------
+OBSIDIAN_TPL="$BASE/templates/obsidian.css.tpl"
+
+OBSIDIAN_SNIPPET_OUT="$HOME/obsidian/.obsidian/snippets/obsidian.css"
+
+if [[ -f "$OBSIDIAN_TPL" ]]; then
+  echo "obsidian block entered"
+  mkdir -p "$(dirname "$OBSIDIAN_SNIPPET_OUT")"
+
+  accent_alt_safe="${accent_alt_hex:-$accent_hex}"
+  overlay_safe="${overlay_hex:-${surface2_hex:-$surface_hex}}"
+  pink_safe="${pink_hex:-$red_hex}"
+  orange_safe="${orange_hex:-$yellow_hex}"
+  teal_safe="${teal_hex:-$green_hex}"
+  lavender_safe="${lavender_hex:-$blue_hex}"
+  green_rgb="$(hex_to_rgb_csv "$green_hex")"
+  red_rgb="$(hex_to_rgb_csv "$red_hex")"
+
+  sed \
+    -e "s/{{bg}}/$bg_hex/g" \
+    -e "s/{{bg_alt}}/$bg_alt_hex/g" \
+    -e "s/{{fg}}/$fg_hex/g" \
+    -e "s/{{fg_dim}}/$fg_dim_hex/g" \
+    -e "s/{{surface}}/$surface_hex/g" \
+    -e "s/{{surface2}}/$surface2_hex/g" \
+    -e "s/{{overlay}}/$overlay_safe/g" \
+    -e "s/{{accent}}/$accent_hex/g" \
+    -e "s/{{accent_alt}}/$accent_alt_safe/g" \
+    -e "s/{{accent_soft}}/$accent_soft/g" \
+    -e "s/{{red}}/$red_hex/g" \
+    -e "s/{{green}}/$green_hex/g" \
+    -e "s/{{yellow}}/$yellow_hex/g" \
+    -e "s/{{blue}}/$blue_hex/g" \
+    -e "s/{{pink}}/$pink_safe/g" \
+    -e "s/{{orange}}/$orange_safe/g" \
+    -e "s/{{teal}}/$teal_safe/g" \
+    -e "s/{{lavender}}/$lavender_safe/g" \
+    -e "s/{{green_rgb}}/$green_rgb/g" \
+    -e "s/{{red_rgb}}/$red_rgb/g" \
+    -e "s/{{font_family}}/$font_family/g" \
+    "$OBSIDIAN_TPL" > "$OBSIDIAN_SNIPPET_OUT"
 fi
 
 hyprctl reload >/dev/null 2>&1 || true
