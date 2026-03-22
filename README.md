@@ -129,11 +129,15 @@ The installer will:
 
 ## Usage
 
-Apply a theme with:
+1. Open the theme picker with:
 
-~/.config/theme-switcher/apply-theme.sh <theme>
+   `$mainMod + T`
 
-If your keybinds are already set up, you can also use the picker scripts from there.
+2. Open the wallpaper picker for the current theme with:
+
+   `$mainMod + W`
+
+In the included Hyprland configuration, `$mainMod` is set to the Super key. Change it if needed.
 
 ## Generated Theme Note
 
