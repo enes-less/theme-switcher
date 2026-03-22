@@ -66,6 +66,7 @@ The theme switcher can currently generate configuration for the following progra
 - SwayNC
 - Wlogout
 - Peaclock
+- Obsidian
 
 If one of these programs is not installed, the script will still generate the configuration files. Reload commands will simply have no effect.
 
@@ -74,6 +75,8 @@ Because of this, theme changes applied while Peaclock is already running will no
 To apply the new theme, restart Peaclock after switching themes.
 
 Rofi is detected automatically. If Rofi is installed, system will use Rofi. If Rofi is not installed but Wofi is installed, then the system will use Wofi instead.
+
+**Since Obsidian uses vault-specific snippets, the theme switcher expects a vault called "obsidian" under your home directory. You can change this behavior in the Obsidian block of `apply-theme.sh`**
 
 More programs will be added in future.
 
