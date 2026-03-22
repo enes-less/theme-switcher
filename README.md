@@ -1,68 +1,60 @@
 # Hyprland Theme Switcher
 
-A modular theme switcher for Hyprland setups.
+A theme switcher for Hyprland setups that renders one theme across multiple applications from a single palette.
 
-This project applies a single theme definition to multiple components in your desktop environment.
+The goal is simple:
 
-Themes are defined once and automatically rendered into configuration files for supported applications.
+- define colors once
+- apply them everywhere
+- keep the desktop consistent
 
-The idea is simple:
-
-- define a palette once
-- apply it everywhere
-- keep your system visually consistent
-
----
-
-# Features
+## Features
 
 - Single-command theme switching
-- Unified color palette system
-- Template-based configuration rendering
-- Wallpaper switching support (theme-specific)
-- Works across multiple UI components
-- Safe reload behavior (won't crash if an app isn't installed)
+- Shared color palette across supported applications
+- Template-based config generation
+- Theme-specific wallpaper support
+- Dynamic theme support through `matugen`
+- Safe reload behavior when optional apps are not installed
 
----
+## Requirements
 
-# Requirements
+This project assumes you are already using **Hyprland**.
 
-This project assumes you are already running **Hyprland**.
+Required:
 
-The following tools **must** be installed:
-
-- `jq` – used to parse JSON theme files
-- `swww` – used to change wallpapers
-
-The script also relies on common Linux utilities which normally already exist:
-
+- `jq`
+- `swww`
 - `bash`
 - `sed`
 - `pgrep`
 - `pkill`
 - `mktemp`
+- `rofi` or `wofi` for theme and wallpaper pickers
 
-The script has dynamic theming support. If you prefer to use dynamic theme, then you will need `matugen`.
+Optional:
 
----
+- `matugen` for the `dynamic` theme
+- `ddcutil` and `inotifywait` for the SwayNC brightness daemon
 
-# Fonts
+## Fonts
 
-The configuration expects this font to exist:
+The configuration expects:
 
 **JetBrainsMono Nerd Font**
 
-If the font is missing, applications will fall back to another font. You can edit the font from templates. This requires a bit of knowledge, and understanding of code.
+If it is missing, applications will fall back to another font.
 
----
+You can change the font from the templates if needed.
 
-# Supported Applications
+## Supported Applications
 
-The theme switcher can currently generate configuration for the following programs:
+The switcher currently generates configuration for:
 
 - Waybar
 - Wofi / Rofi
 - Kitty
+- Fastfetch
 - Starship
 - Hyprlock
 - SwayNC
@@ -70,83 +62,85 @@ The theme switcher can currently generate configuration for the following progra
 - Peaclock
 - Obsidian
 
-If one of these programs is not installed, the script will still generate the configuration files. Reload commands will simply have no effect.
+If a supported application is not installed, configuration files may still be generated, but reload commands for that application will have no effect.
 
-# Important Notes
+## Notes
 
-Matugen is supported. Dynamic theme uses matugen.
+### Dynamic theme
 
----
+`matugen` support is included, but completely optional.
 
-Peaclock runs as a live terminal application and loads its configuration when launched. Because of this, theme changes applied while Peaclock is already running will not take effect immediately.
-
-To apply the new theme, restart Peaclock after switching themes.
+The `dynamic` theme uses `matugen` to generate `colors.json` from the selected wallpaper.
 
 ---
 
-Rofi is detected automatically. If Rofi is installed, system will use Rofi. If Rofi is not installed but Wofi is installed, then the system will use Wofi instead.
+### Rofi / Wofi behavior
+
+If `rofi` is installed, the picker scripts use Rofi.
+
+If `rofi` is not installed but `wofi` is, they fall back to Wofi.
 
 ---
 
-**Since Obsidian uses vault-specific snippets, the theme switcher expects a vault called "obsidian" under your home directory. You can change this behavior in the Obsidian block of `apply-theme.sh`. If you don't want to edit the script, create a vault called obsidian, and then change the theme. Then turn the snippet on from settings.**
+### Obsidian
 
-More programs will be added in future.
+Obsidian uses vault-specific snippets.
 
----
+Because of that, the theme switcher expects a vault named `obsidian` under your home directory by default.
 
-# Installation
+This behavior can be changed in the Obsidian block inside `apply-theme.sh`.
 
-1. Clone the repository
-
-```bash
-   git clone https://github.com/enes-less/theme-switcher.git
-   cd theme-switcher
-```
-
-2. Move the scripts to a directory in your PATH
-
-```bash
-   mkdir -p ~/bin
-   cp scripts/\* ~/bin/
-```
-
-3. Install the theme-switcher system
-
-```bash
-   cp -r theme-switcher ~/.config/
-```
-
-4. Install the Hyprland configuration
-   - Note: This will override your existing hyprland config. Make a backup of your own config before proceeding.
-
-```bash
-   mkdir -p ~/.config/hypr
-   cp -r hyprland/* ~/.config/hypr/
-```
-
-5. Reload Hyprland
-
-```bash
-   hyprctl reload
-```
-
-6. Open the theme picker and select a theme
-
-   Default keybind: $mainMod + T (Windows Key + T)
-
-   Selecting a theme will generate and apply configuration files for supported applications.
-
-   For each theme, there are multiple wallpaper options. You can pick wallpapers using:
-   $mainMod + W
+If you do not want to edit the script, create a vault called `obsidian`, apply a theme, then enable the generated snippet from Obsidian settings.
 
 ---
 
-# Note
+### Peaclock
 
-The repository includes a default `generated-theme.conf` so Hyprland has a valid theme configuration from the start.
+Peaclock reads its configuration when it starts.
 
-However, the full theme is not applied until you select one through the theme picker. Reloading Hyprland only loads the provided Hyprland configuration.
+If Peaclock is already running while you switch themes, it will not update immediately.
 
-To apply the full theme across supported applications such as Waybar, Kitty, and Wofi, you must select a theme using the theme picker.
+Restart Peaclock after switching themes.
 
-Also, GTK font choice will not be effected with the current version of the theme switcher. An optional apply function will be implemented.
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/enes-less/theme-switcher.git
+cd theme-switcher
+```
+
+2. Run the installer:
+
+```bash
+chmod +x ./install.sh
+./install.sh
+```
+
+The installer will:
+
+- back up your existing Hyprland configuration
+- install the Hyprland config files
+- install the theme switcher into `~/.config/theme-switcher`
+- install helper scripts into `~/bin`
+- install SwayNC helper scripts
+- install and enable the `brightnessd.service` user service
+
+## Usage
+
+Apply a theme with:
+
+~/.config/theme-switcher/apply-theme.sh <theme>
+
+If your keybinds are already set up, you can also use the picker scripts from there.
+
+## Generated Theme Note
+
+The repository includes a default `generated-theme.conf` so Hyprland starts with a valid theme file.
+
+However, this does **not** mean the full theme has already been applied.
+
+Reloading Hyprland only loads the Hyprland-side configuration.
+
+To apply the full theme across supported applications such as Waybar, Kitty, Wofi, Rofi, SwayNC, and others, you still need to apply a theme through the theme switcher.
