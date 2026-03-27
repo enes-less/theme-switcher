@@ -24,7 +24,7 @@ This project assumes you are already using **Hyprland**, and have a working Hypr
 ### Absolutely required
 - `bash`
 
-### Required for proper functionability
+### Required for all core functions
 - `jq`
 - `sed`
 - `find`
@@ -38,7 +38,7 @@ This project assumes you are already using **Hyprland**, and have a working Hypr
 ### Required for dynamic theme
 - `matugen`
 
-### One required for wallpaper/theme picker
+### Required for the theme/wallpaper picker (choose one)
 - `rofi`
 - `wofi`
 
@@ -54,7 +54,7 @@ The configuration expects:
 
 **JetBrainsMono Nerd Font**
 
-If it is missing, applications will fall back to another font. Icons might not appear. You can use any NerdFont you desire.
+If it is missing, applications will fall back to another font. Icons might not appear. You can use any Nerd Font you want.
 
 You can change the font from the templates if needed.
 
@@ -130,16 +130,49 @@ chmod +x ./install.sh
 ./install.sh
 ```
 
-The installer will:
+Available options for `./install.sh`:
 
-- back up your existing Hyprland configuration
-- install the Hyprland config files
-- install the theme switcher into `~/.config/theme-switcher`
-- install helper scripts into `~/bin`
-- install SwayNC helper scripts
-- install and enable the `brightnessd.service` user service
+- `--dry-run`  
+  Show what would be done without writing, copying, deleting, or enabling anything.
+
+- `--skip-systemd`  
+  Install files but skip `systemctl --user daemon-reload` and `systemctl --user enable --now brightnessd.service`.
+
+- `--no-backup`  
+  Do not create a backup of an existing `~/.config/hypr` directory before installing.
+
+- `--home PATH`  
+  Install into an alternate HOME directory instead of your real `$HOME`.
+
+- `--install-deps`  
+  Install dependencies before copying files.
+
+- `--no-install-deps`  
+  Skip dependency installation and only perform the file installation steps.
+
+- `-h`, `--help`  
+  Show the help message and exit.
+
+If run without arguments, or without `--install-deps`, the installer will first ask:
+
+```text
+Do you also want to install all dependencies? [Y/n]
+```
+- Y / Enter → installs dependencies first, then continues with file installation
+- n → skips dependency installation and only installs the project files
+
+After that, the installer will:
+
+- Back up your existing Hyprland configuration
+- Install the Hyprland config files
+- Install the theme switcher into ~/.config/theme-switcher
+- Install helper scripts into ~/bin
+- Install SwayNC helper scripts
+- Install and enable the brightnessd.service user service
 
 ## Usage
+
+After installation:
 
 1. Open the theme picker with:
 

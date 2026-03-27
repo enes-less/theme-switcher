@@ -195,33 +195,40 @@ want_interactive_dep_prompt() {
 }
 
 prompt_install_deps_if_needed() {
-  local argc="$1"
-
-  if [[ "$INSTALL_DEPS_MODE" != "ask" ]]; then
+  if [[ "$INSTALL_DEPS_MODE" == "yes" || "$INSTALL_DEPS_MODE" == "no" ]]; then
     return 0
   fi
 
-  if [[ "$argc" -eq 0 ]]; then
-    local answer
-    printf 'Do you also want to install all dependencies? [Y/n] '
-    read -r answer || true
-    answer="${answer:-Y}"
+  local answer
+
+  while true; do
+    printf 'Do you also want to install all dependencies? [y/n/c] '
+    read -r answer || {
+      info "Installation cancelled"
+      exit 1
+    }
 
     case "$answer" in
       [Yy]|[Yy][Ee][Ss])
         INSTALL_DEPS_MODE="yes"
+        return 0
         ;;
       [Nn]|[Nn][Oo])
         INSTALL_DEPS_MODE="no"
+        return 0
+        ;;
+      [Cc]|[Cc][Aa][Nn][Cc][Ee][Ll])
+        info "Installation cancelled by user"
+        exit 0
+        ;;
+      "")
+        warn "Please enter y, n, or c"
         ;;
       *)
-        warn "Invalid answer, defaulting to yes"
-        INSTALL_DEPS_MODE="yes"
+        warn "Invalid input. Please enter y, n, or c"
         ;;
     esac
-  else
-    INSTALL_DEPS_MODE="no"
-  fi
+  done
 }
 
 install_dependencies() {
