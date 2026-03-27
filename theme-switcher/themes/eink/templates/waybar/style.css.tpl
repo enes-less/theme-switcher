@@ -19,7 +19,7 @@ window#waybar {
 
 /* Only the center module group becomes the island */
 .modules-center {
-  background: rgba(46, 52, 64, 0.25);
+  background: alpha({{surface}}, 0.25);
   color: {{accent}};
   margin: 0;
   padding: 6px 6px;

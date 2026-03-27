@@ -145,7 +145,7 @@ hex_to_rgb_csv() {
 IFS=$'\t' read -r \
   bg_hex accent_hex fg_hex fg_dim_hex bg_alt_hex surface_hex surface2_hex \
   red_hex green_hex yellow_hex blue_hex magenta_hex cyan_hex shadow_hex accent_alt_hex \
-  pink_hex orange_hex teal_hex lavender_hex sky_hex overlay_hex \
+  pink_hex orange_hex teal_hex lavender_hex sky_hex overlay_hex border_active_hex border_inactive_hex \
   < <(jq -r '
     [
       (.bg // ""),
@@ -170,7 +170,9 @@ IFS=$'\t' read -r \
       (.teal // ""),
       (.lavender // ""),
       (.sky // ""),
-      (.overlay // "")
+      (.overlay // ""),
+      (.border_active // .accent // ""),
+      (.border_inactive // .surface // .bg_alt // "")
     ] | @tsv
   ' "$COLORS")
 
@@ -671,6 +673,40 @@ if [[ -f "$OBSIDIAN_TPL" ]]; then
     -e "s/{{red_rgb}}/$red_rgb/g" \
     -e "s/{{font_family}}/$font_family/g" \
     "$OBSIDIAN_TPL" > "$OBSIDIAN_SNIPPET_OUT"
+fi
+
+# --------- VS Code ----------
+# MAKE SURE TO EDIT THE OUT PATH IF YOU USE A DIFFERENT VSCODE, LIKE VSCODEIUM OR SOMETHING.
+VSCODE_TPL="$BASE/templates/vscode/settings.json.tpl"
+VSCODE_OUT="$HOME/.config/Code - OSS/User/settings.json"
+
+if [[ -f "$VSCODE_TPL" ]]; then
+  mkdir -p "$(dirname "$VSCODE_OUT")"
+
+  sed \
+    -e "s/{{bg}}/$bg_hex/g" \
+    -e "s/{{bg_alt}}/$bg_alt_hex/g" \
+    -e "s/{{surface}}/$surface_hex/g" \
+    -e "s/{{surface2}}/$surface2_hex/g" \
+    -e "s/{{fg}}/$fg_hex/g" \
+    -e "s/{{fg_dim}}/$fg_dim_hex/g" \
+    -e "s/{{accent}}/$accent_hex/g" \
+    -e "s/{{accent_alt}}/${accent_alt_hex:-$accent_hex}/g" \
+    -e "s/{{red}}/$red_hex/g" \
+    -e "s/{{orange}}/${orange_hex:-$yellow_hex}/g" \
+    -e "s/{{yellow}}/$yellow_hex/g" \
+    -e "s/{{green}}/$green_hex/g" \
+    -e "s/{{teal}}/${teal_hex:-$green_hex}/g" \
+    -e "s/{{blue}}/$blue_hex/g" \
+    -e "s/{{sky}}/${sky_hex:-$blue_hex}/g" \
+    -e "s/{{mauve}}/${magenta_hex:-$accent_hex}/g" \
+    -e "s/{{pink}}/${pink_hex:-$red_hex}/g" \
+    -e "s/{{lavender}}/${lavender_hex:-$blue_hex}/g" \
+    -e "s/{{overlay}}/${overlay_hex:-$surface2_hex}/g" \
+    -e "s/{{shadow}}/$shadow_hex/g" \
+    -e "s/{{border_active}}/${border_active_hex:-$accent_hex}/g" \
+    -e "s/{{border_inactive}}/${border_inactive_hex:-$surface_hex}/g" \
+    "$VSCODE_TPL" > "$VSCODE_OUT"
 fi
 
 hyprctl reload >/dev/null 2>&1 || true

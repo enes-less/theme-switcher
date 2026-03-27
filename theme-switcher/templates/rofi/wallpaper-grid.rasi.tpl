@@ -8,25 +8,17 @@ configuration {
 }
 
 * {
-    bg:         {{bg}};
-    surface:    {{surface}};
-    surface2:   {{surface2}};
-    fg:         {{fg}};
-    fg-dim:     {{overlay}};
-    accent:     {{accent}};
-
     background-color: transparent;
-    text-color:       @fg;
-    border-color:     transparent;
+    text-color:       {{fg}};
     spacing:          0;
     padding:          0;
     margin:           0;
 }
 
 window {
-    background-color: @bg;
+    background-color: {{bg}}aa;
     border:           2px;
-    border-color:     @accent;
+    border-color:     {{accent}};
     border-radius:    20px;
     width:            1120px;
     location:         center;
@@ -41,7 +33,7 @@ mainbox {
 }
 
 inputbar {
-    background-color: @surface;
+    background-color: {{surface}}88;
     border-radius:    14px;
     padding:          12px 16px;
     children:         [prompt, entry];
@@ -50,14 +42,14 @@ inputbar {
 
 prompt {
     background-color: transparent;
-    text-color:       @accent;
+    text-color:       {{accent}};
 }
 
 entry {
     background-color:  transparent;
-    text-color:        @fg;
+    text-color:        {{fg}};
     placeholder:       " Select wallpaper...";
-    placeholder-color: @fg-dim;
+    placeholder-color: {{fg_dim}};
     vertical-align:    0.5;
 }
 
@@ -65,7 +57,7 @@ listview {
     background-color: transparent;
     columns:          4;
     lines:            2;
-\    spacing:          16px;
+    spacing:          16px;
     padding:          4px;
     scrollbar:        true;
     fixed-columns:    false;
@@ -87,26 +79,22 @@ scrollbar {
 }
 
 element {
-    background-color: @surface;
-    border-radius:    14px;
-    padding:          12px;
+    border-radius:    16px;
+    padding:          16px;
     spacing:          10px;
     orientation:      vertical;
     cursor:           pointer;
 }
 
-element normal.normal {
-    background-color: @surface;
-}
-
+element normal.normal,
 element alternate.normal {
-    background-color: @surface;
+    background-color: {{surface}}88;
 }
 
 element selected.normal {
-    background-color: {{accent}}22;
+    background-color: {{accent}}33;
     border:           2px;
-    border-color:     @accent;
+    border-color:     {{accent}};
 }
 
 element-icon {
@@ -120,7 +108,7 @@ element-icon {
 
 element-text {
     background-color: transparent;
-    text-color:       @fg;
+    text-color:       {{fg}}f2;
     cursor:           inherit;
     font:             "{{font_family}} 11";
     horizontal-align: 0.5;
@@ -128,5 +116,5 @@ element-text {
 }
 
 element selected.normal element-text {
-    text-color: @accent;
+    text-color: {{accent}}f2;
 }

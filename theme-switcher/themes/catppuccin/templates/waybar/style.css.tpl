@@ -19,7 +19,7 @@ window#waybar {
 
 /* Only the center module group becomes the island */
 .modules-center {
-  background: rgba(46, 52, 64, 0.25);
+  background: alpha({{surface}}, 0.25);
   color: {{fg}};
   margin: 0;
   padding: 6px 6px;
@@ -83,7 +83,7 @@ window#waybar {
   padding: 0 4px;
 
   background: transparent;
-  border: 2px solid {{surface2}};
+  border: 2px solid {{surface}};
   border-radius: 8px;
 
   color: {{fg}};
@@ -119,4 +119,11 @@ window#waybar {
 #custom-notification {
   border-left: 1px solid {{surface2}};
   padding-left: 12px;
+}
+
+
+tooltip {
+  color: {{accent}};
+  background-color: {{surface2}};
+  text-shadow: none;
 }

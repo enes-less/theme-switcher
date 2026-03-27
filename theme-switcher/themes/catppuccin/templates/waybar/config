@@ -37,7 +37,7 @@
     "format-wifi": "  {essid}",
     "format-ethernet": "󰈀 Wired",
     "format-disconnected": "󰖪  Offline",
-    "tooltip": false
+    "tooltip": true
   },
   "bluetooth": {
     "format": " BT",

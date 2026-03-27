@@ -4,11 +4,10 @@ configuration {
     hover-select: true;
     me-select-entry: "";
     me-accept-entry: "MousePrimary";
+    font:         "{{font_family}} 11";
 }
 
 * {
-    accent: {{accent}};
-
     background-color: transparent;
     text-color:       {{fg}};
     spacing:          0;
@@ -17,57 +16,79 @@ configuration {
 }
 
 window {
-    background-color: {{bg}};
-    border-radius:    20px;
-    border-color:     {{accent}};
+    background-color: {{bg}}aa;
     border:           2px;
-    width:            60%;
+    border-color:     {{accent}};
+    border-radius:    20px;
+    width:            1120px;
     location:         center;
     anchor:           center;
 }
 
 mainbox {
     background-color: transparent;
-    children:         [listview];
+    children:         [inputbar, listview];
     padding:          20px;
-    spacing:          15px;
+    spacing:          16px;
+}
+
+inputbar {
+    background-color: {{surface}}88;
+    border-radius:    14px;
+    padding:          12px 16px;
+    children:         [prompt, entry];
+    spacing:          10px;
+}
+
+prompt {
+    background-color: transparent;
+    text-color:       {{accent}};
+}
+
+entry {
+    background-color:  transparent;
+    text-color:        {{fg}};
+    placeholder:       " Select theme...";
+    placeholder-color: {{fg_dim}};
+    vertical-align:    0.5;
 }
 
 listview {
     background-color: transparent;
     columns:          4;
     lines:            2;
-    spacing:          15px;
-    padding:          10px;
+    spacing:          16px;
+    padding:          4px;
+    scrollbar:        true;
+    fixed-columns:    false;
     fixed-height:     false;
-    fixed-columns:    true;
-    border:           0;
+    cycle:            true;
+    dynamic:          true;
+    layout:           vertical;
+    flow:             horizontal;
+    border:           0px;
 }
 
 scrollbar {
-    width: 8px;
-    border: 0;
-    border-radius: 999px;
-    background-color: {{surface}};
-    handle-width: 8px;
-    handle-color: {{accent}};
+    width:            8px;
+    border:           0;
+    border-radius:    999px;
+    background-color: {{surface2}}16;
+    handle-width:     8px;
+    handle-color:     {{accent}};
 }
 
 element {
-    background-color: {{surface}};
-    border-radius:    15px;
-    padding:          15px;
+    border-radius:    16px;
+    padding:          16px;
     spacing:          10px;
     orientation:      vertical;
     cursor:           pointer;
 }
 
-element normal.normal {
-    background-color: {{surface}};
-}
-
+element normal.normal,
 element alternate.normal {
-    background-color: {{surface}};
+    background-color: {{surface}}88;
 }
 
 element selected.normal {
@@ -85,12 +106,12 @@ element-icon {
 
 element-text {
     background-color: transparent;
-    text-color:       {{fg}};
+    text-color:       {{fg}}f2;
     font:             "{{font_family}} 12";
     horizontal-align: 0.5;
     vertical-align:   0.5;
 }
 
 element selected.normal element-text {
-    text-color: {{accent}};
+    text-color: {{accent}}f2;
 }

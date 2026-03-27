@@ -19,23 +19,34 @@ The goal is simple:
 
 ## Requirements
 
-This project assumes you are already using **Hyprland**.
+This project assumes you are already using **Hyprland**, and have a working Hyprland setup.
 
-Required:
-
-- `jq`
-- `swww`
+### Absolutely required
 - `bash`
+
+### Required for proper functionability
+- `jq`
 - `sed`
+- `find`
+- `sort`
+- `mktemp`
 - `pgrep`
 - `pkill`
-- `mktemp`
-- `rofi` or `wofi` for theme and wallpaper pickers
+- `hyprctl`
+- `swww`
 
-Optional:
+### Required for dynamic theme
+- `matugen`
 
-- `matugen` for the `dynamic` theme
-- `ddcutil` and `inotifywait` for the SwayNC brightness daemon
+### One required for wallpaper/theme picker
+- `rofi`
+- `wofi`
+
+### Additional feature-specific dependencies
+- `ddcutil` — required for the SwayNC brightness scripts
+- `inotify-tools` (`inotifywait`) — required for the `brightnessd` daemon
+- `systemd` / `systemctl --user` — required if you want the installer to enable and start `brightnessd.service`
+- `imagemagick` (`magick` or `convert`) — optional, only for thumbnail generation in the theme picker
 
 ## Fonts
 
@@ -43,7 +54,7 @@ The configuration expects:
 
 **JetBrainsMono Nerd Font**
 
-If it is missing, applications will fall back to another font.
+If it is missing, applications will fall back to another font. Icons might not appear. You can use any NerdFont you desire.
 
 You can change the font from the templates if needed.
 
@@ -61,6 +72,7 @@ The switcher currently generates configuration for:
 - Wlogout
 - Peaclock
 - Obsidian
+- VSCode
 
 If a supported application is not installed, configuration files may still be generated, but reload commands for that application will have no effect.
 
